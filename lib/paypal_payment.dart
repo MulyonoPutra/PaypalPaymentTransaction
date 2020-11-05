@@ -72,7 +72,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
 
   // item name, price and quantity
   String itemName = 'iPhone X';
-  String itemPrice = '1.99';
+  String itemPrice = '9999.99';
   int quantity = 1;
 
   Map<String, dynamic> getOrderParams() {
@@ -86,8 +86,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
     ];
 
     // checkout invoice details
-    String totalAmount = '1.99';
-    String subTotalAmount = '1.99';
+    String totalAmount = '9999.99';
+    String subTotalAmount = '9999.99';
     String shippingCost = '0';
     int shippingDiscountCost = 0;
     String userFirstName = 'Mulyono';
@@ -144,47 +144,60 @@ class PaypalPaymentState extends State<PaypalPayment> {
     print(checkoutUrl);
     if (checkoutUrl != null) {
       return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-          child: CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              border: Border(),
-              leading: Container(),
-              trailing: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(Icons.close, color: Colors.grey,),
-              ),
-              middle: Text('Complete Purchase'),
+        body: Dialog(
+          insetPadding: EdgeInsets.only(top: 40),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(13.0))),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20),
+              // bottomRight: Radius.circular(13),
+              // bottomLeft: Radius.circular(13)
             ),
-            child: Container(
-              padding: EdgeInsets.only(top: 20),
-              child: Center(
-                child: WebView(
-                  initialUrl: checkoutUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  navigationDelegate: (NavigationRequest request) {
-                    if (request.url.contains(returnURL)) {
-                      final uri = Uri.parse(request.url);
-                      final payerID = uri.queryParameters['PayerID'];
-                      if (payerID != null) {
-                        services
-                            .executePayment(executeUrl, payerID, accessToken)
-                            .then((id) {
-                          widget.onFinish(id);
+            child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                border: Border(),
+                leading: Container(),
+                trailing: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ),
+                ),
+                middle: Text('Complete Purchase'),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Center(
+                  child: WebView(
+                    initialUrl: checkoutUrl,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    navigationDelegate: (NavigationRequest request) {
+                      if (request.url.contains(returnURL)) {
+                        final uri = Uri.parse(request.url);
+                        final payerID = uri.queryParameters['PayerID'];
+                        if (payerID != null) {
+                          services
+                              .executePayment(executeUrl, payerID, accessToken)
+                              .then((id) {
+                            widget.onFinish(id);
+                            Navigator.of(context).pop();
+                          });
+                        } else {
                           Navigator.of(context).pop();
-                        });
-                      } else {
+                        }
                         Navigator.of(context).pop();
                       }
-                      Navigator.of(context).pop();
-                    }
-                    if (request.url.contains(cancelURL)) {
-                      Navigator.of(context).pop();
-                    }
-                    return NavigationDecision.navigate;
-                  },
+                      if (request.url.contains(cancelURL)) {
+                        Navigator.of(context).pop();
+                      }
+                      return NavigationDecision.navigate;
+                    },
+                  ),
                 ),
               ),
             ),

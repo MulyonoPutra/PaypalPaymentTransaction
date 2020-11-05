@@ -7,48 +7,44 @@ class ModalWillScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      //   child: WillPopScope(
-      // onWillPop: () async {
-      //   bool shouldClose = true;
-      //   await showCupertinoDialog(
-      //       context: context,
-      //       builder: (context) => CupertinoAlertDialog(
-      //             title: Text('Should Close?'),
-      //             actions: <Widget>[
-      //               CupertinoButton(
-      //                 child: Text('Yes'),
-      //                 onPressed: () {
-      //                   shouldClose = true;
-      //                   Navigator.of(context).pop();
-      //                 },
-      //               ),
-      //               CupertinoButton(
-      //                 child: Text('No'),
-      //                 onPressed: () {
-      //                   shouldClose = false;
-      //                   Navigator.of(context).pop();
-      //                 },
-      //               ),
-      //             ],
-      //           ));
-      //   return shouldClose;
-      // },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-              leading: Container(), middle: Text('Modal Page')),
-          child: Center(
-            child: WebView(
-          initialUrl: 'https://flutter.io',
-          javascriptMode: JavascriptMode.unrestricted,
-        ),
-          ),
-        ),
-      ),
-    );
+    
+      return Dialog(
+          insetPadding: EdgeInsets.only(top:40),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(13.0))),
+        
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(13),
+              topLeft: Radius.circular(13),
+              // bottomRight: Radius.circular(13),
+              // bottomLeft: Radius.circular(13)
+            ),
+            child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                border: Border(),
+                leading: Container(),
+                trailing: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ),
+                ),
+                middle: Text('Complete Purchase'),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 20),
+                child: Center(
+                  child: WebView(
+                    initialUrl: 'https://flutter.dev',
+                    javascriptMode: JavascriptMode.unrestricted,
+                  ),
+                ),
+              ),
+            ),
+          ));
   }
 }
